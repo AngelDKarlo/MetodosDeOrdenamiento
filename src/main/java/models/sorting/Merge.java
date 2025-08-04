@@ -26,21 +26,21 @@ public class Merge extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 paso++;
                 if (paso == 1) {
-                    mensaje = "Empezando merge sort...";
+                    mensaje = "empezando";
                     repaint();
                 } else if (paso == 2) {
-                    mensaje = "Ordenando el array...";
+                    mensaje = "ordenando";
                     currentArr = mergesort(arr, 0, arr.length - 1);
                     repaint();
                 } else {
                     timer.stop();
-                    mensaje = "¡Array ordenado!";
+                    mensaje = "se ordeno";
                     repaint();
                 }
             }
         });
     }
-
+    //colocamos el metodo que es mas que nada el funcionamiento (sacado de la pagina que mostro la maestra jsjs)
     public static int[] mergesort(int[] arr, int lo, int hi) {
         if (lo == hi) {
             int[] ba = new int[1];
@@ -89,37 +89,37 @@ public class Merge extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Dibujar título
+        // Dibuja título
         g.setFont(new Font("Arial", Font.BOLD, 18));
         g.setColor(Color.BLACK);
         g.drawString("Merge Sort", 20, 30);
 
-        // Dibujar mensaje
+        // Dibuja mensaje
         g.setFont(new Font("Arial", Font.PLAIN, 12));
         g.drawString(mensaje, 20, 60);
 
-        // Dibujar las barras
+        // Dibuja las barras
         int x = 50;
         int y = 300;
 
         for (int i = 0; i < currentArr.length; i++) {
-            // Altura de la barra basada en el valor
+            // Altura de la barra
             int altura = currentArr[i] * 20;
 
-            // Dibujar la barra
+            // Dibuja la barra
             g.setColor(Color.BLUE);
             g.fillRect(x + i * 60, y - altura, 50, altura);
 
-            // Dibujar el borde
+            // Dibuja el borde
             g.setColor(Color.BLACK);
             g.drawRect(x + i * 60, y - altura, 50, altura);
 
-            // Dibujar el número
+            // Dibuja el número
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 14));
             g.drawString("" + currentArr[i], x + i * 60 + 20, y - altura/2 + 5);
 
-            // Dibujar índice
+            // Dibuja índice
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.PLAIN, 10));
             g.drawString("" + i, x + i * 60 + 20, y + 15);
@@ -129,7 +129,7 @@ public class Merge extends JPanel {
     public void empezar() {
         timer.start();
     }
-
+//aqui se mandan a llamar los elementos que colocamos en la interfaz
     public static void main(String[] args) {
         JFrame ventana = new JFrame("Merge Sort");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
