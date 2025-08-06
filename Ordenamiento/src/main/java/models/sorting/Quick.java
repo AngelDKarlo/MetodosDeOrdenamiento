@@ -76,7 +76,7 @@ class DrawPanel extends JPanel {
 
     public DrawPanel(int[] arr) {
         this.arr = arr;
-        setBackground(new Color(240, 248, 255)); // Azul muy claro
+        setBackground(new Color(240, 248, 255)); 
     }
 
     @Override
@@ -98,26 +98,21 @@ class DrawPanel extends JPanel {
             Color bubbleColor = Color.getHSBColor((float)i / arr.length, 0.4f, 0.85f);
             g2.setColor(bubbleColor);
 
-            // Dibujar burbujas con sombra y borde
             for (int b = 0; b < arr[i]; b++) {
                 int y = yBase - (b * (circleDiameter + 5));
                 int x = xCenter - circleDiameter / 2;
 
-                // Sombra
-                g2.setColor(new Color(0, 0, 0, 30)); // sombra gris con transparencia
+                g2.setColor(new Color(0, 0, 0, 30));
                 g2.fillOval(x + 3, y + 3, circleDiameter, circleDiameter);
 
-                // Burbujas
                 g2.setColor(bubbleColor);
                 g2.fillOval(x, y, circleDiameter, circleDiameter);
 
-                // Borde
                 g2.setColor(Color.WHITE);
                 g2.setStroke(new BasicStroke(2));
                 g2.drawOval(x, y, circleDiameter, circleDiameter);
             }
 
-            // Valor numérico centrado abajo
             g2.setColor(Color.DARK_GRAY);
             g2.setFont(new Font("Arial", Font.BOLD, 16));
             String value = String.valueOf(arr[i]);
