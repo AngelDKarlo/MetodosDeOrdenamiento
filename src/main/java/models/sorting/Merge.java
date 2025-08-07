@@ -1,18 +1,16 @@
-package models.sorting;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Merge extends JPanel {
+public class mergesort extends JPanel {
     private int[] arr = {2, 9, 8, 3, 6, 4, 10, 7};
     private int[] currentArr;
     private String mensaje = "Array inicial";
     private int paso = 0;
     private Timer timer;
 
-    public Merge() {
+    public mergesort() {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.WHITE);
         currentArr = new int[arr.length];
@@ -26,21 +24,22 @@ public class Merge extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 paso++;
                 if (paso == 1) {
+                    //mensajes que se muestran en la ventana mientras sucede el procedimiento
                     mensaje = "empezando";
                     repaint();
                 } else if (paso == 2) {
-                    mensaje = "ordenando";
+                    mensaje = "ordenando array";
                     currentArr = mergesort(arr, 0, arr.length - 1);
                     repaint();
                 } else {
                     timer.stop();
-                    mensaje = "se ordeno";
+                    mensaje = "se ordeno el array";
                     repaint();
                 }
             }
         });
     }
-    //colocamos el metodo que es mas que nada el funcionamiento (sacado de la pagina que mostro la maestra jsjs)
+
     public static int[] mergesort(int[] arr, int lo, int hi) {
         if (lo == hi) {
             int[] ba = new int[1];
@@ -88,6 +87,8 @@ public class Merge extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Dibuja título
         g.setFont(new Font("Arial", Font.BOLD, 18));
@@ -98,43 +99,86 @@ public class Merge extends JPanel {
         g.setFont(new Font("Arial", Font.PLAIN, 12));
         g.drawString(mensaje, 20, 60);
 
-        // Dibuja las barras
-        int x = 50;
-        int y = 300;
+        // Dibuja los elementos como círculos conectados
+        int centerX = getWidth() / 2;
+        int centerY = 200;
+        int radius = 30;
+        int spacing = 80;
+
+        // Calcula posición inicial para centrar
+        int startX = centerX - ((currentArr.length - 1) * spacing) / 2;
 
         for (int i = 0; i < currentArr.length; i++) {
-            // Altura de la barra
-            int altura = currentArr[i] * 20;
+            int x = startX + i * spacing;
+            int y = centerY;
 
-            // Dibuja la barra
-            g.setColor(Color.BLUE);
-            g.fillRect(x + i * 60, y - altura, 50, altura);
+            // Color basado en el valor para mejor visualización
+            Color circleColor = getColorByValue(currentArr[i]);
 
-            // Dibuja el borde
-            g.setColor(Color.BLACK);
-            g.drawRect(x + i * 60, y - altura, 50, altura);
+            // Dibuja sombra del círculo
+            g2d.setColor(new Color(0, 0, 0, 50));
+            g2d.fillOval(x - radius + 3, y - radius + 3, radius * 2, radius * 2);
 
-            // Dibuja el número
+            // Dibuja el círculo
+            g2d.setColor(circleColor);
+            g2d.fillOval(x - radius, y - radius, radius * 2, radius * 2);
+
+            // Dibujar el borde del círculo
+            g2d.setColor(Color.BLACK);
+            g2d.setStroke(new BasicStroke(3));
+            g2d.drawOval(x - radius, y - radius, radius * 2, radius * 2);
+
+            // Dibuja el número dentro del círculo
             g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 14));
-            g.drawString("" + currentArr[i], x + i * 60 + 20, y - altura/2 + 5);
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            FontMetrics fm = g.getFontMetrics();
+            String value = "" + currentArr[i];
+            int textWidth = fm.stringWidth(value);
+            int textHeight = fm.getAscent();
+            g.drawString(value, x - textWidth/2, y + textHeight/2 - 2);
 
-            // Dibuja índice
+            // Dibuja índice debajo del círculo
             g.setColor(Color.BLACK);
-            g.setFont(new Font("Arial", Font.PLAIN, 10));
-            g.drawString("" + i, x + i * 60 + 20, y + 15);
+            g.setFont(new Font("Arial", Font.PLAIN, 12));
+            fm = g.getFontMetrics();
+            String index = "" + i;
+            int indexWidth = fm.stringWidth(index);
+            g.drawString(index, x - indexWidth/2, y + radius + 20);
+
+            // Dibuja flecha hacia el siguiente elemento (excepto el último)
+            if (i < currentArr.length - 1) {
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.setStroke(new BasicStroke(2));
+
+                // Línea de la flecha
+                int arrowStartX = x + radius;
+                int arrowEndX = startX + (i + 1) * spacing - radius;
+                g2d.drawLine(arrowStartX, y, arrowEndX, y);
+
+                // Punta de la flecha
+                int[] arrowX = {arrowEndX, arrowEndX - 10, arrowEndX - 10};
+                int[] arrowY = {y, y - 5, y + 5};
+                g2d.fillPolygon(arrowX, arrowY, 3);
+            }
         }
+    }
+
+    // Método para asignar colores basados en el valor
+    private Color getColorByValue(int value) {
+        if (value <= 3) return new Color(178, 150, 212);   // Rojo para valores bajos
+        else if (value <= 6) return new Color(108, 144, 171); // Azul para valores medios
+        else return new Color(145, 113, 210);             // Verde para valores altos
     }
 
     public void empezar() {
         timer.start();
     }
-//aqui se mandan a llamar los elementos que colocamos en la interfaz
+
     public static void main(String[] args) {
         JFrame ventana = new JFrame("Merge Sort");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Merge panel = new Merge();
+        mergesort panel = new mergesort();
         ventana.add(panel);
 
         JButton boton = new JButton("Empezar");
